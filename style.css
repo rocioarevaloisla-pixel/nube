@@ -41,9 +41,9 @@ body {
 }
 
 .logo-placeholder {
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
+    width: 110px;
+    height: 110px;
+    border-radius: 18px;
     border: 1.5px dashed rgba(238,240,255,0.35);
     display: flex;
     align-items: center;
