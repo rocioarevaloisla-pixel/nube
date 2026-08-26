@@ -1,0 +1,128 @@
+:root {
+    --bg-deep: #0f1330;
+    --bg-mid: #1c2350;
+    --accent: #e68ec0;
+    --accent-soft: #f6c9e3;
+    --lilac: #b9a6ff;
+    --text: #eef0ff;
+    --text-dim: #a8adcf;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Inter', 'Trebuchet MS', sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 20% 15%, rgba(230,142,192,0.18), transparent 40%),
+        radial-gradient(circle at 85% 75%, rgba(185,166,255,0.16), transparent 45%),
+        linear-gradient(160deg, var(--bg-deep), var(--bg-mid));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 80%;
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 60px 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-bottom: 40px;
+}
+
+.logo-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    border: 1.5px dashed rgba(238,240,255,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    flex-shrink: 0;
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin: 0 0 6px;
+}
+
+h1 {
+    font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+}
+
+.card.extendida {
+    text-align: center;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(6px);
+    padding: 48px 40px 40px;
+    margin: 10px;
+    border-radius: 28px;
+    width: 100%;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+}
+
+.card h2 {
+    font-family: 'Space Grotesk', 'Trebuchet MS', sans-serif;
+    font-size: 1.3rem;
+    margin: 0 0 14px;
+    color: var(--text);
+}
+
+.card p {
+    text-align: center;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 42ch;
+    margin: 0 auto 28px;
+}
+
+button {
+    background: var(--accent);
+    border: none;
+    color: #1a1030;
+    font-weight: 600;
+    padding: 13px 30px;
+    border-radius: 999px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 8px 24px -8px rgba(230,142,192,0.6);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -8px rgba(230,142,192,0.75);
+}
+
+table { width: 90%; }
+
+@media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    .card.extendida { padding: 40px 24px 32px; }
+}
