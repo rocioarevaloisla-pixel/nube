@@ -52,6 +52,14 @@ body {
     letter-spacing: 0.05em;
     color: var(--text-dim);
     flex-shrink: 0;
+    overflow: hidden;
+}
+
+.logo-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 14px;
 }
 
 .eyebrow {
@@ -172,7 +180,7 @@ form input::placeholder { color: var(--text-dim); }
 .btn-borrar {
     background: rgba(230,142,192,0.15);
     color: var(--accent-soft);
-    padding: 6px 14px;
+    padding: 6px 10px;
     font-size: 12px;
     box-shadow: none;
 }
@@ -186,7 +194,7 @@ form input::placeholder { color: var(--text-dim); }
 .btn-editar {
     background: rgba(185,166,255,0.15);
     color: var(--lilac);
-    padding: 6px 14px;
+    padding: 6px 10px;
     font-size: 12px;
     box-shadow: none;
 }
@@ -195,6 +203,32 @@ form input::placeholder { color: var(--text-dim); }
     box-shadow: none;
     transform: none;
     background: rgba(185,166,255,0.28);
+}
+
+.btn-volver {
+    display: inline-block;
+    margin: 0 0 24px;
+    padding: 10px 20px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: var(--accent-soft);
+    font-size: 13px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: background 0.15s ease;
+}
+
+.btn-volver:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+.tabla-scroll {
+    overflow-x: auto;
+    margin: 0 0 24px;
+}
+
+.tabla-datos td:last-child {
+    white-space: nowrap;
 }
 
 .btn-limpiar {
