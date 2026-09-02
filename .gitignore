@@ -1,0 +1,11 @@
+# Dependencias
+node_modules/
+
+# Firebase CLI (generados)
+.firebaserc
+.firebase/
+
+# Sistema / editor
+.DS_Store
+Thumbs.db
+*.log

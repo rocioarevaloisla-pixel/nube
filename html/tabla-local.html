@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Flores | Cloud Computing (localStorage)</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+    <a class="btn-volver" href="../index.html">&larr; Volver</a>
+    <div class="header">
+        <div class="logo-placeholder">
+            <img src="../img/logo.png" alt="Logo">
+        </div>
+        <div class="title-block">
+            <p class="eyebrow">Instituto Profesional Santo Tomás</p>
+            <h1>Cloud Computing</h1>
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card extendida">
+            <h2>Registro de Flores</h2>
+            <form id="formDatos" class="form-datos">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+                <input type="text" id="color" placeholder="Color" required>
+                <input type="text" id="temporada" placeholder="Temporada" required>
+                <input type="number" id="precio" placeholder="Precio" required>
+                <input type="number" id="stock" placeholder="Stock" required>
+                <button type="submit">Agregar</button>
+                <button type="button" id="btnCancelarEdicion" class="btn-limpiar" hidden>Cancelar edición</button>
+            </form>
+
+            <div class="tabla-scroll">
+            <table id="tablaDatos" class="tabla-datos">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Color</th>
+                        <th>Temporada</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            </div>
+
+            <button id="btnLimpiar" class="btn-limpiar">Limpiar todo</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const STORAGE_KEY = "floresCloud";
+const tablaBody = document.querySelector("#tablaDatos tbody");
+const form = document.querySelector("#formDatos");
+const btnCancelar = document.querySelector("#btnCancelarEdicion");
+let editandoIndice = -1;
+
+function leerDatos() {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function guardarDatos(datos) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+}
+
+function salirDeEdicion() {
+    editandoIndice = -1;
+    btnCancelar.hidden = true;
+    form.querySelector("button[type=submit]").textContent = "Agregar";
+    form.reset();
+}
+
+function render(datos) {
+    tablaBody.innerHTML = "";
+    datos.forEach((item, i) => {
+        const fila = document.createElement("tr");
+        const celdas = [
+            item.nombre,
+            item.color,
+            item.temporada,
+            item.precio,
+            item.stock
+        ];
+        celdas.forEach((texto) => {
+            const td = document.createElement("td");
+            td.textContent = texto;
+            fila.appendChild(td);
+        });
+
+        const celdaAccion = document.createElement("td");
+
+        const btnEditar = document.createElement("button");
+        btnEditar.type = "button";
+        btnEditar.className = "btn-editar";
+        btnEditar.textContent = "Editar";
+        btnEditar.onclick = () => {
+            editandoIndice = i;
+            btnCancelar.hidden = false;
+            form.querySelector("button[type=submit]").textContent = "Guardar";
+            form.nombre.value = item.nombre;
+            form.color.value = item.color;
+            form.temporada.value = item.temporada;
+            form.precio.value = item.precio;
+            form.stock.value = item.stock;
+            form.scrollIntoView({ behavior: "smooth" });
+        };
+
+        const btnBorrar = document.createElement("button");
+        btnBorrar.type = "button";
+        btnBorrar.className = "btn-borrar";
+        btnBorrar.textContent = "Borrar";
+        btnBorrar.onclick = () => {
+            const datos = leerDatos();
+            datos.splice(i, 1);
+            guardarDatos(datos);
+            salirDeEdicion();
+            render(datos);
+        };
+
+        celdaAccion.appendChild(btnEditar);
+        celdaAccion.appendChild(btnBorrar);
+        fila.appendChild(celdaAccion);
+        tablaBody.appendChild(fila);
+    });
+}
+
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nuevo = {
+        nombre: form.nombre.value.trim(),
+        color: form.color.value.trim(),
+        temporada: form.temporada.value.trim(),
+        precio: form.precio.value.trim(),
+        stock: form.stock.value.trim()
+    };
+    if (Object.values(nuevo).some((v) => !v)) return;
+
+    const datos = leerDatos();
+    if (editandoIndice >= 0) {
+        datos[editandoIndice] = nuevo;
+    } else {
+        datos.push(nuevo);
+    }
+    guardarDatos(datos);
+    salirDeEdicion();
+    render(datos);
+});
+
+btnCancelar.addEventListener("click", salirDeEdicion);
+
+document.querySelector("#btnLimpiar").addEventListener("click", () => {
+    localStorage.removeItem(STORAGE_KEY);
+    salirDeEdicion();
+    render([]);
+});
+
+render(leerDatos());
+</script>
+
+</body>
+</html>

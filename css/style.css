@@ -244,6 +244,22 @@ form input::placeholder { color: var(--text-dim); }
     background: rgba(255,255,255,0.14);
 }
 
+.btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+}
+
+.btn-row .btn-muted {
+    background: rgba(255,255,255,0.12);
+    color: var(--text);
+}
+
+.btn-row .btn-muted:hover {
+    background: rgba(255,255,255,0.18);
+}
+
 @media (max-width: 600px) {
     h1 { font-size: 1.8rem; }
     .card.extendida { padding: 40px 24px 32px; }

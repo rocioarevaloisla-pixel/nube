@@ -2,14 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Flores | Cloud Computing</title>
+<title>Flores | Cloud Computing (Firebase)</title>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
 <div class="container">
-    <a class="btn-volver" href="index.html">&larr; Volver</a>
+    <a class="btn-volver" href="../index.html">&larr; Volver</a>
     <div class="header">
         <div class="logo-placeholder">
             <img src="../img/logo.png" alt="Logo">
@@ -22,7 +22,7 @@
 
     <div class="cards">
         <div class="card extendida">
-            <h2>Registro de Flores</h2>
+            <h2>Registro de Flores · Firebase</h2>
             <form id="formDatos" class="form-datos">
                 <input type="text" id="nombre" placeholder="Nombre" required>
                 <input type="text" id="color" placeholder="Color" required>
@@ -54,43 +54,60 @@
     </div>
 </div>
 
-<script>
-const STORAGE_KEY = "floresCloud";
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+    getDatabase,
+    ref,
+    onValue,
+    push,
+    set,
+    update,
+    remove
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDXu3g35qAowLLFpL7g2gLY1-9ACTjOQ0w",
+    authDomain: "nube-4b69e.firebaseapp.com",
+    databaseURL: "https://nube-4b69e-default-rtdb.firebaseio.com",
+    projectId: "nube-4b69e",
+    storageBucket: "nube-4b69e.firebasestorage.app",
+    messagingSenderId: "537501007530",
+    appId: "1:537501007530:web:6a5b07b33da090afe39ad3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const coleccion = ref(db, "flores");
+
 const tablaBody = document.querySelector("#tablaDatos tbody");
 const form = document.querySelector("#formDatos");
 const btnCancelar = document.querySelector("#btnCancelarEdicion");
-let editandoIndice = -1;
-
-function leerDatos() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch (e) {
-        return [];
-    }
-}
-
-function guardarDatos(datos) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
-}
+let editandoId = null;
 
 function salirDeEdicion() {
-    editandoIndice = -1;
+    editandoId = null;
     btnCancelar.hidden = true;
     form.querySelector("button[type=submit]").textContent = "Agregar";
     form.reset();
 }
 
-function render(datos) {
+function obtenerDatosForm() {
+    return {
+        nombre: form.nombre.value.trim(),
+        color: form.color.value.trim(),
+        temporada: form.temporada.value.trim(),
+        precio: form.precio.value.trim(),
+        stock: form.stock.value.trim()
+    };
+}
+
+function render(registros) {
     tablaBody.innerHTML = "";
-    datos.forEach((item, i) => {
+    registros.forEach(([id, item]) => {
+
         const fila = document.createElement("tr");
-        const celdas = [
-            item.nombre,
-            item.color,
-            item.temporada,
-            item.precio,
-            item.stock
-        ];
+        const celdas = [item.nombre, item.color, item.temporada, item.precio, item.stock];
         celdas.forEach((texto) => {
             const td = document.createElement("td");
             td.textContent = texto;
@@ -104,7 +121,7 @@ function render(datos) {
         btnEditar.className = "btn-editar";
         btnEditar.textContent = "Editar";
         btnEditar.onclick = () => {
-            editandoIndice = i;
+            editandoId = id;
             btnCancelar.hidden = false;
             form.querySelector("button[type=submit]").textContent = "Guardar";
             form.nombre.value = item.nombre;
@@ -119,12 +136,9 @@ function render(datos) {
         btnBorrar.type = "button";
         btnBorrar.className = "btn-borrar";
         btnBorrar.textContent = "Borrar";
-        btnBorrar.onclick = () => {
-            const datos = leerDatos();
-            datos.splice(i, 1);
-            guardarDatos(datos);
+        btnBorrar.onclick = async () => {
+            await remove(ref(db, `flores/${id}`));
             salirDeEdicion();
-            render(datos);
         };
 
         celdaAccion.appendChild(btnEditar);
@@ -134,37 +148,36 @@ function render(datos) {
     });
 }
 
-form.addEventListener("submit", (e) => {
+function escucharDatos() {
+    onValue(coleccion, (snapshot) => {
+        const datos = snapshot.val() || {};
+        render(Object.entries(datos));
+    }, (error) => {
+        console.error("Error al escuchar Realtime Database:", error);
+    });
+}
+
+form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const nuevo = {
-        nombre: form.nombre.value.trim(),
-        color: form.color.value.trim(),
-        temporada: form.temporada.value.trim(),
-        precio: form.precio.value.trim(),
-        stock: form.stock.value.trim()
-    };
+    const nuevo = obtenerDatosForm();
     if (Object.values(nuevo).some((v) => !v)) return;
 
-    const datos = leerDatos();
-    if (editandoIndice >= 0) {
-        datos[editandoIndice] = nuevo;
+    if (editandoId) {
+        await update(ref(db, `flores/${editandoId}`), nuevo);
     } else {
-        datos.push(nuevo);
+        await set(push(coleccion), nuevo);
     }
-    guardarDatos(datos);
     salirDeEdicion();
-    render(datos);
 });
 
 btnCancelar.addEventListener("click", salirDeEdicion);
 
-document.querySelector("#btnLimpiar").addEventListener("click", () => {
-    localStorage.removeItem(STORAGE_KEY);
+document.querySelector("#btnLimpiar").addEventListener("click", async () => {
+    await remove(coleccion);
     salirDeEdicion();
-    render([]);
 });
 
-render(leerDatos());
+escucharDatos();
 </script>
 
 </body>
