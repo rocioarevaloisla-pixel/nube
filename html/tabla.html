@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Tabla de datos | Cloud Computing</title>
+<title>Flores | Cloud Computing</title>
 <link rel="stylesheet" href="../css/style.css">
 </head>
 
@@ -22,13 +22,13 @@
 
     <div class="cards">
         <div class="card extendida">
-            <h2>Registro de Trabajadores</h2>
+            <h2>Registro de Flores</h2>
             <form id="formDatos" class="form-datos">
                 <input type="text" id="nombre" placeholder="Nombre" required>
-                <input type="text" id="rut" placeholder="RUT" required>
-                <input type="email" id="correo" placeholder="Correo" required>
-                <input type="tel" id="telefono" placeholder="Teléfono" required>
-                <input type="text" id="direccion" placeholder="Cargo" required>
+                <input type="text" id="color" placeholder="Color" required>
+                <input type="text" id="temporada" placeholder="Temporada" required>
+                <input type="number" id="precio" placeholder="Precio" required>
+                <input type="number" id="stock" placeholder="Stock" required>
                 <button type="submit">Agregar</button>
                 <button type="button" id="btnCancelarEdicion" class="btn-limpiar" hidden>Cancelar edición</button>
             </form>
@@ -38,10 +38,10 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>RUT</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Cargo</th>
+                        <th>Color</th>
+                        <th>Temporada</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -55,7 +55,7 @@
 </div>
 
 <script>
-const STORAGE_KEY = "datosCloud";
+const STORAGE_KEY = "floresCloud";
 const tablaBody = document.querySelector("#tablaDatos tbody");
 const form = document.querySelector("#formDatos");
 const btnCancelar = document.querySelector("#btnCancelarEdicion");
@@ -86,10 +86,10 @@ function render(datos) {
         const fila = document.createElement("tr");
         const celdas = [
             item.nombre,
-            item.rut,
-            item.correo,
-            item.telefono,
-            item.direccion
+            item.color,
+            item.temporada,
+            item.precio,
+            item.stock
         ];
         celdas.forEach((texto) => {
             const td = document.createElement("td");
@@ -108,10 +108,10 @@ function render(datos) {
             btnCancelar.hidden = false;
             form.querySelector("button[type=submit]").textContent = "Guardar";
             form.nombre.value = item.nombre;
-            form.rut.value = item.rut;
-            form.correo.value = item.correo;
-            form.telefono.value = item.telefono;
-            form.direccion.value = item.direccion;
+            form.color.value = item.color;
+            form.temporada.value = item.temporada;
+            form.precio.value = item.precio;
+            form.stock.value = item.stock;
             form.scrollIntoView({ behavior: "smooth" });
         };
 
@@ -138,10 +138,10 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nuevo = {
         nombre: form.nombre.value.trim(),
-        rut: form.rut.value.trim(),
-        correo: form.correo.value.trim(),
-        telefono: form.telefono.value.trim(),
-        direccion: form.direccion.value.trim()
+        color: form.color.value.trim(),
+        temporada: form.temporada.value.trim(),
+        precio: form.precio.value.trim(),
+        stock: form.stock.value.trim()
     };
     if (Object.values(nuevo).some((v) => !v)) return;
 
